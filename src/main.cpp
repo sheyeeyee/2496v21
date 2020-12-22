@@ -13,7 +13,7 @@ pros::Imu inert (); //<--insert inertial sensor port here
 pros::Motor lift (16,pros::E_MOTOR_GEARSET_18);
 pros::ADIAnalogIn lift_pot ('B');
 
-//intake
+//intakeijfijifjesijfeijei
 pros::Motor intake_left (11,pros::E_MOTOR_GEARSET_06);
 pros::Motor intake_right (20,pros::E_MOTOR_GEARSET_06,true);
 
