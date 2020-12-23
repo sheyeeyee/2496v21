@@ -36,6 +36,12 @@ int count = 0;
 
 pot_PID lift_pid(0.5,0.00008,0,BOTTOM_LIFT,true);
 
+void init_imu(){
+	imu.reset();
+	pros::delay(2300);
+	while (imu.is_calibrating());
+}
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -51,7 +57,6 @@ pot_PID lift_pid(0.5,0.00008,0,BOTTOM_LIFT,true);
  */
 void initialize() {
 	pros::lcd::initialize();
-
 
 	}
 
@@ -101,9 +106,7 @@ void autonomous() {}
  */
 void opcontrol() {
 /*
-	imu.reset();
-	pros::delay(2300);
-	while (imu.is_calibrating());
+	
 
 	while (true) {
 
