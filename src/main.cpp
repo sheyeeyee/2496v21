@@ -27,7 +27,7 @@ pros::Controller con (CONTROLLER_MASTER);
 //chassis
 turn_PID turn(.65,.001,0,270,true); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
 
-chassis_PID go(0.141,0.00000055,0,0,0,0,4000, true);
+//chassis_PID go(0.14074,0.0000005,0,0,0,0,4000, true);
 
 //lift PID
 int TOP_LIFT = 1900;
@@ -36,7 +36,7 @@ bool pid_active = true;
 int current_error = 0;
 int count = 0;
 
-pot_PID lift_pid(0.5,0.00008,0,BOTTOM_LIFT,true);
+pot_PID lift_pid(0.5,0.000085,0,BOTTOM_LIFT,true);
 
 /**
  * A callback function for LLEMU's center button.
@@ -118,10 +118,10 @@ void opcontrol() {
 
 		while(true){
 
-			int temp = go.update(back_left, front_left, back_right, front_right,0,imu);
+		//	int temp = go.update(back_left, front_left, back_right, front_right,0,imu);
 
-			con.print(2, 0, "value %d",go.current_pos);
-	/*	int power = con.get_analog(ANALOG_LEFT_Y);
+		//	con.print(2, 0, "value %d",go.current_pos);
+		int power = con.get_analog(ANALOG_LEFT_Y);
     int turn = con.get_analog(ANALOG_RIGHT_X);
     int left = power + turn;
     int right = power - turn;
@@ -131,29 +131,7 @@ void opcontrol() {
 		back_right.move(right);
 
 
-
-			front_left.move(con.get_analog(ANALOG_LEFT_Y));
-			back_left.move(con.get_analog(ANALOG_LEFT_Y));
-			front_right.move(con.get_analog(ANALOG_LEFT_Y));
-			back_right.move(con.get_analog(ANALOG_LEFT_Y));
-
-			if(con.get_analog(ANALOG_RIGHT_X)){
-				front_left.move(-127);
-				back_left.move(-127);
-				front_right.move(127);
-				back_right.move(127);
-			}
-				else if(con.get_analog(ANALOG_RIGHT_X)){
-
-
-}
-			}
-
-*/
-
 			//turn
-
-
 
 					//error and update function is desired angle - sensored angle
 
