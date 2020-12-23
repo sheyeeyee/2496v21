@@ -56,11 +56,13 @@ public:
   :PID(kP, kI, kD, target, is_enabled){
   }
 
+  //update the PID and spin given motors, this will be accessed externally
   void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
     int speed = iter_pos(tolerance, imu);
     FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
   }
 
+  //update the PID
   int iter_pos(int tolerance, pros::Imu imu){
     int current_pos = correct_imu_pos(target, tolerance, imu);
     current_error = target - current_pos;
@@ -68,6 +70,7 @@ public:
     return PID::update();
   }
 
+  //sets IMU to zero if it is close to zero to account for gyro error - removes jerk at beginning of pid
   int correct_imu_pos(int target, int tolerance, pros::Imu imu){
     if((target>0 && imu.get_heading() > 360-tolerance) || (target<0 && imu.get_heading()>0 && imu.get_heading()<tolerance))
       return 0;
@@ -99,7 +102,7 @@ public:
     current_error = target - current_pos;
     int speed = PID::update();
     BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);
-    
+
     return speed;
   }
 
