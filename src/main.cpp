@@ -32,8 +32,6 @@ chassis_PID go(0.141,0.00000055,0,0,0,0,4000, true);
 //lift PID
 int TOP_LIFT = 1900;
 int BOTTOM_LIFT = 570;
-bool pid_active = true;
-int current_error = 0;
 int count = 0;
 
 pot_PID lift_pid(0.5,0.00008,0,BOTTOM_LIFT,true);
