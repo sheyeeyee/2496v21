@@ -121,35 +121,6 @@ void opcontrol() {
 			int temp = go.update(back_left, front_left, back_right, front_right,0,imu);
 
 			con.print(2, 0, "value %d",go.current_pos);
-	/*	int power = con.get_analog(ANALOG_LEFT_Y);
-    int turn = con.get_analog(ANALOG_RIGHT_X);
-    int left = power + turn;
-    int right = power - turn;
-    front_left.move(left);
-		back_left.move(left);
-    front_right.move(right);
-		back_right.move(right);
-
-
-
-			front_left.move(con.get_analog(ANALOG_LEFT_Y));
-			back_left.move(con.get_analog(ANALOG_LEFT_Y));
-			front_right.move(con.get_analog(ANALOG_LEFT_Y));
-			back_right.move(con.get_analog(ANALOG_LEFT_Y));
-
-			if(con.get_analog(ANALOG_RIGHT_X)){
-				front_left.move(-127);
-				back_left.move(-127);
-				front_right.move(127);
-				back_right.move(127);
-			}
-				else if(con.get_analog(ANALOG_RIGHT_X)){
-
-
-}
-			}
-
-*/
 
 			//turn
 
@@ -180,7 +151,7 @@ void opcontrol() {
 
 					//lift position display
 						if(count%25==0){con.clear_line(2);}
-						//con.print(2, 0, "value %d",lift_pot.get_value()); //modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
+						//modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
 						count++;
  			 			pros::delay(10);
 
