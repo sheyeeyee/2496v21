@@ -86,6 +86,7 @@ class chassis_PID : public PID{
   void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
     int turn_mod = turn.iterPos(tolerance, imu);
     int speed = PID::update();
+    BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);
   }
 
 };
