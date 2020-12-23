@@ -79,21 +79,27 @@ public:
 class chassis_PID : public PID{
 public:
 
+  //create turn PID object to straighten chassis while moving
   turn_PID turn = turn_PID(0,0,0,0,false);
+
   int current_pos;
 
   chassis_PID(double kP, double kI, double kD, double turn_kP, double turn_kI, double turn_kD, int target, bool is_enabled)
   :PID(kP, kI, kD, target, is_enabled){
+    //init turn PID
     turn = turn_PID(turn_kP, turn_kI, turn_kD, 0, true);
-
   }
 
   int update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
     int turn_mod = turn.iter_pos(tolerance, imu);
+
+    //take average of all encoders for position
     current_pos = (BL.get_position()+FL.get_position()+BR.get_position()+FR.get_position())/4;
+
     current_error = target - current_pos;
     int speed = PID::update();
     BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);
+    
     return speed;
   }
 
