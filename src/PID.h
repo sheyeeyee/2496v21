@@ -51,19 +51,21 @@ public:
 
 class turn_PID : public PID{
 public:
-  turn_PID(double kP, double kI, double kD, int target, bool is_enabled)
-  :PID(kP, kI, kD, target, is_enabled){}
 
-  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
-    int speed = iterPos(tolerance, imu);
+  turn_PID(double kP, double kI, double kD, int target, bool is_enabled)
+  :PID(kP, kI, kD, target, is_enabled){
+  }
+
+  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
+    int speed = iter_pos(tolerance, imu);
     FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
   }
 
-  int iterPos(int tolerance, pros::Imu imu){
+  int iter_pos(int tolerance, pros::Imu imu){
     int current_pos = correct_imu_pos(target, tolerance, imu);
-    current_error = current_pos - target;
+    current_error = target - current_pos;
     int speed = -PID::update();
-    return -PID::update();
+    return PID::update();
   }
 
   int correct_imu_pos(int target, int tolerance, pros::Imu imu){
@@ -75,18 +77,25 @@ public:
 };
 
 class chassis_PID : public PID{
+public:
 
   turn_PID turn = turn_PID(0,0,0,0,false);
+  int current_pos;
 
-  chassis_PID(double kP, double kI, double kD, double turn_kP, double turn_kI, double turn_kD)
-  :PID(kP, kI, kD,0,false){
+  chassis_PID(double kP, double kI, double kD, double turn_kP, double turn_kI, double turn_kD, int target, bool is_enabled)
+  :PID(kP, kI, kD, target, is_enabled){
     turn = turn_PID(turn_kP, turn_kI, turn_kD, 0, true);
+
   }
 
-  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
-    int turn_mod = turn.iterPos(tolerance, imu);
+  int update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
+    int turn_mod = turn.iter_pos(tolerance, imu);
+    current_pos = (BL.get_position()+FL.get_position()+BR.get_position()+FR.get_position())/4;
+    current_error = target - current_pos;
     int speed = PID::update();
     BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);
+    return speed;
   }
+
 
 };
