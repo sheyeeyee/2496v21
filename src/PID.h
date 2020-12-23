@@ -52,12 +52,23 @@ public:
 class chassis_PID : public PID{
 
   chassis_PID(double kP, double kI, double kD)
-  :PID(kP, kI, kD,0,false)
-  {
-  }
+  :PID(kP, kI, kD,0,false){}
+
 };
 
 
-class turnPID : public PID{
+class turn_PID : public PID{
+public:
+  turn_PID(double kP, double kI, double kD, int target, bool is_enabled)
+  :PID(kP, kI, kD, target, is_enabled){}
 
+  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, pros::Imu imu){
+    int current_pos;
+    if(imu.get_heading()>350){current_pos = 0;}
+    else{current_pos=imu.get_heading();}
+
+    current_error = current_pos - target;
+    int speed = -PID::update();
+    FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
+  }
 };

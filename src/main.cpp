@@ -7,13 +7,13 @@ pros::Motor front_left (1, pros::E_MOTOR_GEARSET_18);
 pros::Motor front_right (10,pros::E_MOTOR_GEARSET_18,true);
 pros::Motor back_left (12,pros::E_MOTOR_GEARSET_18);
 pros::Motor back_right (13,pros::E_MOTOR_GEARSET_18,true);
-pros::Imu inert (); //<--insert inertial sensor port here
+pros::Imu imu (19);
 
 //lift
 pros::Motor lift (16,pros::E_MOTOR_GEARSET_18);
 pros::ADIAnalogIn lift_pot ('B');
 
-//intakeijfijifjesijfeijei
+//intake
 pros::Motor intake_left (11,pros::E_MOTOR_GEARSET_06);
 pros::Motor intake_right (20,pros::E_MOTOR_GEARSET_06,true);
 
@@ -24,8 +24,8 @@ pros::Motor roller (17,pros::E_MOTOR_GEARSET_18,true);
 pros::Controller con (CONTROLLER_MASTER);
 
 
-//chassis?
-
+//chassis
+turn_PID turn(.65,.001,0,270,true); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
 
 //lift PID
 int TOP_LIFT = 1900;
@@ -42,15 +42,6 @@ pot_PID lift_pid(0.5,0.00008,0,BOTTOM_LIFT,true);
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -60,9 +51,8 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "sup");
 
-	pros::lcd::register_btn1_cb(on_center_button);
+
 	}
 
 /**
@@ -110,15 +100,28 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
-	con.print(2,0,"here", 0);
+	imu.reset();
+	pros::delay(2300);
+	while (imu.is_calibrating());
 
 	while (true) {
+
+		con.print(2,0,"%d",(int)imu.get_heading());
+
+		pros::lcd::set_text(1, std::to_string(imu.get_heading()));
+		turn.update(back_left, front_left, back_right, front_right, imu);
+
 //chassis
+/*
 			front_left.move(con.get_analog(ANALOG_LEFT_Y));
 			front_right.move(con.get_analog(ANALOG_RIGHT_Y));
 			back_left.move(con.get_analog(ANALOG_LEFT_Y));
 			back_right.move(con.get_analog(ANALOG_RIGHT_Y));
+*/
+			//turn
+
+
+					//error and update function is desired angle - sensored angle
 
 //lift
 			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_L1))	{
@@ -132,8 +135,7 @@ void opcontrol() {
 				}
 
 			//lift PID
-
-			lift_pid.update(lift_pot, lift);
+				lift_pid.update(lift_pot, lift);
 
 				if(con.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
 					if(lift_pid.target == TOP_LIFT){
@@ -142,10 +144,9 @@ void opcontrol() {
 					else{lift_pid.target = TOP_LIFT;}
 				}
 
-
 					//lift position display
 						if(count%25==0){con.clear_line(2);}
-						con.print(2, 0, "value %d",lift_pot.get_value()); //modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
+						//con.print(2, 0, "value %d",lift_pot.get_value()); //modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
 						count++;
  			 			pros::delay(10);
 
