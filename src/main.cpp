@@ -100,6 +100,7 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+/*
 	imu.reset();
 	pros::delay(2300);
 	while (imu.is_calibrating());
@@ -109,15 +110,16 @@ void opcontrol() {
 		con.print(2,0,"%d",(int)imu.get_heading());
 
 		pros::lcd::set_text(1, std::to_string(imu.get_heading()));
-		turn.update(back_left, front_left, back_right, front_right, imu);
-
+		turn.update(back_left, front_left, back_right, front_right, 10, imu);
+*/
 //chassis
-/*
+
+		while(true){
 			front_left.move(con.get_analog(ANALOG_LEFT_Y));
 			front_right.move(con.get_analog(ANALOG_RIGHT_Y));
 			back_left.move(con.get_analog(ANALOG_LEFT_Y));
 			back_right.move(con.get_analog(ANALOG_RIGHT_Y));
-*/
+
 			//turn
 
 

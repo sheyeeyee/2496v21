@@ -49,26 +49,43 @@ public:
 
 
 
-class chassis_PID : public PID{
-
-  chassis_PID(double kP, double kI, double kD)
-  :PID(kP, kI, kD,0,false){}
-
-};
-
-
 class turn_PID : public PID{
 public:
   turn_PID(double kP, double kI, double kD, int target, bool is_enabled)
   :PID(kP, kI, kD, target, is_enabled){}
 
-  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, pros::Imu imu){
-    int current_pos;
-    if(imu.get_heading()>350){current_pos = 0;}
-    else{current_pos=imu.get_heading();}
-
-    current_error = current_pos - target;
-    int speed = -PID::update();
+  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
+    int speed = iterPos(tolerance, imu);
     FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
   }
+
+  int iterPos(int tolerance, pros::Imu imu){
+    int current_pos = correct_imu_pos(target, tolerance, imu);
+    current_error = current_pos - target;
+    int speed = -PID::update();
+    return -PID::update();
+  }
+
+  int correct_imu_pos(int target, int tolerance, pros::Imu imu){
+    if((target>0 && imu.get_heading() > 360-tolerance) || (target<0 && imu.get_heading()>0 && imu.get_heading()<tolerance))
+      return 0;
+    return imu.get_heading();
+  }
+
+};
+
+class chassis_PID : public PID{
+
+  turn_PID turn = turn_PID(0,0,0,0,false);
+
+  chassis_PID(double kP, double kI, double kD, double turn_kP, double turn_kI, double turn_kD)
+  :PID(kP, kI, kD,0,false){
+    turn = turn_PID(turn_kP, turn_kI, turn_kD, 0, true);
+  }
+
+  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
+    int turn_mod = turn.iterPos(tolerance, imu);
+    int speed = PID::update();
+  }
+
 };
