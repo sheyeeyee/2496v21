@@ -114,22 +114,22 @@ void opcontrol() {
 		pros::lcd::set_text(1, std::to_string(imu.get_heading()));
 		turn.update(back_left, front_left, back_right, front_right, 10, imu);
 */
-//chassis
 
 		while(true){
 
 		//	int temp = go.update(back_left, front_left, back_right, front_right,0,imu);
 
 		//	con.print(2, 0, "value %d",go.current_pos);
-		int power = con.get_analog(ANALOG_LEFT_Y);
-    int turn = con.get_analog(ANALOG_RIGHT_X);
-    int left = power + turn;
-    int right = power - turn;
-    front_left.move(left);
-		back_left.move(left);
-    front_right.move(right);
-		back_right.move(right);
 
+		//chassis
+			int power = con.get_analog(ANALOG_LEFT_Y);
+	    int turn = con.get_analog(ANALOG_RIGHT_X);
+	    int left = power + turn;
+	    int right = power - turn;
+	    front_left.move(left);
+			back_left.move(left);
+	    front_right.move(right);
+			back_right.move(right);
 
 			//turn
 
