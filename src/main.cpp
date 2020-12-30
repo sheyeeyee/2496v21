@@ -1,5 +1,6 @@
 #include "main.h"
 #include "PID.h"
+#include <cmath>
 //CONSTRUCTORS
 
 //chassis
@@ -31,7 +32,7 @@ turn_PID turn(.65,.001,0,270,true); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011
 
 //lift PID
 int TOP_LIFT = 1900;
-int BOTTOM_LIFT = 570;
+int BOTTOM_LIFT = 560;
 bool pid_active = true;
 int current_error = 0;
 int count = 0;
@@ -101,6 +102,15 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+
+double joystickCurve(double input, double prev, double tol){
+		double yes = pow(input/20,3);
+		if(prev+tol<yes){return prev+tol;}
+		else if(prev-tol>yes){return prev-tol;}
+		return yes;
+}
+
+
 void opcontrol() {
 /*
 	imu.reset();
@@ -114,6 +124,8 @@ void opcontrol() {
 		pros::lcd::set_text(1, std::to_string(imu.get_heading()));
 		turn.update(back_left, front_left, back_right, front_right, 10, imu);
 */
+		double prev_power=0;
+		double prev_turn =0;
 
 		while(true){
 
@@ -122,8 +134,10 @@ void opcontrol() {
 		//	con.print(2, 0, "value %d",go.current_pos);
 
 		//chassis
-			int power = con.get_analog(ANALOG_LEFT_Y);
-	    int turn = con.get_analog(ANALOG_RIGHT_X);
+
+			double power = joystickCurve(con.get_analog(ANALOG_LEFT_Y), prev_power, 15);
+	    double turn = joystickCurve(con.get_analog(ANALOG_RIGHT_X), prev_turn, 15);
+			prev_power = power; prev_turn = turn;
 	    int left = power + turn;
 	    int right = power - turn;
 	    front_left.move(left);
@@ -181,8 +195,13 @@ void opcontrol() {
 				roller.move(0);
 			}
 
+			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
+				intake_left.move(-127);
+				intake_right.move(-127);
+			}
+
 //scoring while intaking
-			 if(con.get_digital(pros::E_CONTROLLER_DIGITAL_B))	{
+			 if(con.get_digital(pros::E_CONTROLLER_DIGITAL_R2))	{
 				intake_left.move(127);
  				intake_right.move(127);
 				roller.move(-127);
