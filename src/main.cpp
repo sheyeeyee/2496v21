@@ -25,8 +25,6 @@ pros::Motor roller (17,pros::E_MOTOR_GEARSET_18,true);
 pros::Controller con (CONTROLLER_MASTER);
 
 
-//chassis
-turn_PID turn(.65,.001,0,270,true); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
 
 //chassis_PID go(0.14074,0.0000005,0,0,0,0,4000, true);
 
@@ -52,10 +50,38 @@ pot_PID lift_pid(0.5,0.000085,0,BOTTOM_LIFT,true);
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
+ turn_PID turn(.65,.001,0,0,false); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
+ void run_turn_PID(void* param){
+ 	while(1==1){
+		if(turn.is_enabled){
+ 		turn.update(back_left, front_left, back_right, front_right, 5, imu, con);
+
+		pros::delay(10);
+	}
+	else{
+		pros::delay(23);
+	}
+ 	}
+}
+
+ chassis_PID chassis(0.14074,0.0000005,0,0,0,0,0, false);
+
+ void run_chassis_PID(void* param){
+ 	while(1==1){
+		if(chassis.is_enabled){
+ 		chassis.update(back_left, front_left, back_right, front_right, 0, imu);
+		pros::delay(10);
+	}
+	else{
+		pros::delay(23);
+	}
+ 	}
+ }
+
 void initialize() {
 	pros::lcd::initialize();
-
-
+	pros::Task yes(run_chassis_PID);
+	pros::Task no(run_turn_PID);
 	}
 
 /**
@@ -87,8 +113,33 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void stop_motors(){
+	back_left.move(0);
+	front_left.move(0);
+	back_right.move(0);
+	front_right.move(0);
+}
 
+void autonomous() {
+
+	imu.reset();
+	pros::delay(2100);
+
+	turn.target = 30;
+	turn.reset(true);
+	intake_right.move(127);
+	intake_left.move(127);
+	pros::delay(1000);
+	intake_right.move(0);
+	intake_left.move(0);
+
+	turn.reset(false);
+	stop_motors();
+	pros::delay(20);
+	chassis.target=500;
+	chassis.reset(true);
+
+}
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

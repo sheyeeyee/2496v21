@@ -12,6 +12,13 @@ public:
   PID(double kP, double kI, double kD, int target, bool is_enabled){
     this -> kP = kP; this -> kI = kI; this -> kD = kD; this -> target = target; this -> is_enabled = is_enabled;
   }
+public:
+
+  void reset(bool enable){
+      prev_error = 0;
+      i_value =0;
+      is_enabled = enable;
+  }
 
   public:int update(){
     if(is_enabled){
@@ -56,9 +63,11 @@ public:
   :PID(kP, kI, kD, target, is_enabled){
   }
 
-  void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
-    int speed = iter_pos(tolerance, imu);
-    FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
+void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
+if (is_enabled){
+      int speed = iter_pos(tolerance, imu);
+      FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
+  }
   }
 
   int iter_pos(int tolerance, pros::Imu imu){
@@ -86,6 +95,13 @@ public:
   :PID(kP, kI, kD, target, is_enabled){
     turn = turn_PID(turn_kP, turn_kI, turn_kD, 0, true);
 
+  }
+
+  void reset(bool enable){
+      prev_error = 0;
+      turn.i_value = 0;
+      i_value =0;
+      is_enabled = enable;
   }
 
   int update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
