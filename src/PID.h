@@ -63,6 +63,10 @@ public:
   :PID(kP, kI, kD, target, is_enabled){
   }
 
+void set_target(pros::Imu imu){
+  target = imu.get_heading()+target;
+}
+
 void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
 if (is_enabled){
       int speed = iter_pos(tolerance, imu);
@@ -90,6 +94,7 @@ public:
 
   turn_PID turn = turn_PID(0,0,0,0,false);
   int current_pos;
+  int correct = 0;
 
   chassis_PID(double kP, double kI, double kD, double turn_kP, double turn_kI, double turn_kD, int target, bool is_enabled)
   :PID(kP, kI, kD, target, is_enabled){
@@ -97,16 +102,19 @@ public:
 
   }
 
-  void reset(bool enable){
+  void reset(bool enable, int correction){
       prev_error = 0;
+      correct = correction;
       turn.i_value = 0;
       i_value =0;
       is_enabled = enable;
   }
 
+
+
   int update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
     int turn_mod = turn.iter_pos(tolerance, imu);
-    current_pos = (BL.get_position()+FL.get_position()+BR.get_position()+FR.get_position())/4;
+    current_pos = (BL.get_position()+FL.get_position()+BR.get_position()+FR.get_position()-correct)/4;
     current_error = target - current_pos;
     int speed = PID::update();
     BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);

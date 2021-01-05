@@ -120,24 +120,49 @@ void stop_motors(){
 	front_right.move(0);
 }
 
+int correction(){
+	return back_right.get_position()+front_right.get_position()+back_left.get_position()+front_left.get_position();
+}
+
 void autonomous() {
 
 	imu.reset();
 	pros::delay(2100);
 
-	turn.target = 30;
-	turn.reset(true);
+	stop_motors();
+  pros::delay(20);
+  intake_right.move(-127);
+	intake_left.move(-127);
+  lift.move(127);
+  pros::delay(20);
+  intake_right.move(-127);
+	intake_left.move(-127);
+  lift.move(-127); //create a loop where it repeats 5-6 times?
+
+	pros::delay(20);
+	chassis.target=1300;
+	chassis.reset(true, correction());
 	intake_right.move(127);
 	intake_left.move(127);
+	roller.move(127);
 	pros::delay(1000);
 	intake_right.move(0);
 	intake_left.move(0);
+	roller.move(0);
+
+	chassis.reset(false, correction());
+	turn.target = 75;
+	turn.reset(true);
+  intake_right.move(127);
+	intake_left.move(127);
+	roller.move(127);
+	pros::delay(1000);
+	intake_right.move(0);
+	intake_left.move(0);
+	roller.move(0);
 
 	turn.reset(false);
-	stop_motors();
-	pros::delay(20);
-	chassis.target=500;
-	chassis.reset(true);
+
 
 }
 /**
