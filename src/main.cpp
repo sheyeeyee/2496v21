@@ -130,6 +130,7 @@ void autonomous() {
 	pros::delay(2100);
 
 	stop_motors();
+//deploy
   pros::delay(20);
   intake_right.move(-127);
 	intake_left.move(-127);
@@ -139,6 +140,7 @@ void autonomous() {
 	intake_left.move(-127);
   lift.move(-127); //create a loop where it repeats 5-6 times?
 
+//intake first ball
 	pros::delay(20);
 	chassis.target=1300;
 	chassis.reset(true, correction());
@@ -150,19 +152,46 @@ void autonomous() {
 	intake_left.move(0);
 	roller.move(0);
 
+//turn and fully intake
 	chassis.reset(false, correction());
 	turn.target = 75;
 	turn.reset(true);
+  pros::delay(100);
   intake_right.move(127);
 	intake_left.move(127);
 	roller.move(127);
-	pros::delay(1000);
 	intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
 
+//scoring!!! while descoring?
 	turn.reset(false);
+  lift.move(127);
+  chassis.target=1000;
+  chassis.reset(true, correction());
+  pros::delay(200);
+  intake_right.move(127);
+	intake_left.move(127);
+  roller.move(-127);
+  pros::delay(1000);
+  lift.move(-127);
+  intake_right.move(0);
+	intake_left.move(0);
+	roller.move(0);
 
+//backing out
+  chassis.reset(true, correction());
+  chassis.target=-500;
+  chassis.reset(false, correction());
+  turn.target=100;
+  turn.reset(true);
+
+//going to next goal
+  chassis.target=1500;
+  chassis.reset(true, correction());
+
+//scoring
+  lift.move(127);
 
 }
 /**
