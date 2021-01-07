@@ -130,18 +130,9 @@ void autonomous() {
 	pros::delay(2100);
 
 	stop_motors();
-//deploy
-  pros::delay(20);
-  intake_right.move(-127);
-	intake_left.move(-127);
-  lift.move(127);
-  pros::delay(20);
-  intake_right.move(-127);
-	intake_left.move(-127);
-  lift.move(-127); //create a loop where it repeats 5-6 times?
 
 //intake first ball
-	pros::delay(20);
+	pros::delay(2000);
 	chassis.target=1300;
 	chassis.reset(true, correction());
 	intake_right.move(127);
@@ -154,44 +145,85 @@ void autonomous() {
 
 //turn and fully intake
 	chassis.reset(false, correction());
-	turn.target = 75;
+  turn.target=75;
 	turn.reset(true);
-  pros::delay(100);
+  pros::delay(1000);
   intake_right.move(127);
 	intake_left.move(127);
 	roller.move(127);
+  pros::delay(1000);
 	intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
 
-//scoring!!! while descoring?
-	turn.reset(false);
-  lift.move(127);
-  chassis.target=1000;
-  chassis.reset(true, correction());
-  pros::delay(200);
+//lift to score
+
+
+//scoring while descoring
+  pros::delay(1000);
   intake_right.move(127);
 	intake_left.move(127);
-  roller.move(-127);
+	roller.move(-127);
   pros::delay(1000);
-  lift.move(-127);
   intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
 
-//backing out
+  chassis.target=-1000;
   chassis.reset(true, correction());
-  chassis.target=-500;
+  pros::delay(1000);
+
   chassis.reset(false, correction());
+  turn.target=30;
+  turn.reset(true);
+  pros::delay(1000);
+
+  turn.reset(false);
+  pros::delay(1000);
+
+  chassis.target=900;
+  chassis.reset(true, correction());
+  intake_right.move(127);
+	intake_left.move(127);
+	roller.move(127);
+  pros::delay(1000);
+  intake_right.move(0);
+	intake_left.move(0);
+	roller.move(0);
+
+  chassis.reset(false, correction());
+  pros::delay(100);
+  intake_right.move(127);
+  intake_left.move(127);
+  roller.move(127);
+
+  turn.target=100; //needs to turn left here
+  turn.reset(true);
+  pros::delay(1000);
+
+  turn.reset(false);
+  intake_right.move(0);
+	intake_left.move(0);
+	roller.move(0);
+
   turn.target=100;
   turn.reset(true);
+  pros::delay(100);
+  turn.reset(false);
 
-//going to next goal
-  chassis.target=1500;
+  pros::delay(1000);
+  chassis.target=1000;
   chassis.reset(true, correction());
+  intake_right.move(127);
+	intake_left.move(127);
+	roller.move(-127);
+  pros::delay(1000);
+  intake_right.move(0);
+	intake_left.move(0);
+	roller.move(0);
+  pros::delay(100);
 
-//scoring
-  lift.move(127);
+  chassis.reset(false, correction());
 
 }
 /**

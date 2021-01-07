@@ -106,7 +106,7 @@ public:
       prev_error = 0;
       correct = correction;
       turn.i_value = 0;
-      i_value =0;
+      i_value = 0;
       is_enabled = enable;
   }
 
