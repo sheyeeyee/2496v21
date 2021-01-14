@@ -64,27 +64,26 @@ public:
   }
 
 void set_target(pros::Imu imu){
-  target = imu.get_heading()+target;
+  target = imu.get_rotation()+target;
+}
+
+void reach_target(int delay, pros::Imu imu){
+  while(std::abs(target-imu.get_rotation())>5);
+  pros::delay(delay);
 }
 
 void update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu, pros::Controller con){
 if (is_enabled){
-      int speed = iter_pos(tolerance, imu);
+      int speed = iter_pos(imu);
       FL.move(speed); BL.move(speed); FR.move(-speed); BR.move(-speed);
   }
   }
 
-  int iter_pos(int tolerance, pros::Imu imu){
-    int current_pos = correct_imu_pos(target, tolerance, imu);
+  int iter_pos(pros::Imu imu){
+    int current_pos = imu.get_rotation();
     current_error = target - current_pos;
     int speed = -PID::update();
     return PID::update();
-  }
-
-  int correct_imu_pos(int target, int tolerance, pros::Imu imu){
-    if((target>0 && imu.get_heading() > 360-tolerance) || (target<0 && imu.get_heading()>0 && imu.get_heading()<tolerance))
-      return 0;
-    return imu.get_heading();
   }
 
 };
@@ -113,7 +112,7 @@ public:
 
 
   int update(pros::Motor BL, pros::Motor FL, pros::Motor BR, pros::Motor FR, int tolerance, pros::Imu imu){
-    int turn_mod = turn.iter_pos(tolerance, imu);
+    int turn_mod = turn.iter_pos(imu);
     current_pos = (BL.get_position()+FL.get_position()+BR.get_position()+FR.get_position()-correct)/4;
     current_error = target - current_pos;
     int speed = PID::update();
