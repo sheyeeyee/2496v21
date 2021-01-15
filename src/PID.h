@@ -22,7 +22,7 @@ public:
 
   public:int update(){
     if(is_enabled){
-      i_value+=current_error;
+      i_value = std::max(i_value+=current_error,500);
       int d_value = current_error - prev_error;
       prev_error = current_error;
       return current_error*kP+i_value*kI+d_value*kD;
@@ -55,7 +55,6 @@ public:
 };
 
 
-
 class turn_PID : public PID{
 public:
 
@@ -64,11 +63,11 @@ public:
   }
 
 void set_target(pros::Imu imu){
-  target = imu.get_rotation()+target;
+  target = (int)imu.get_rotation()+target;
 }
 
 void reach_target(int delay, pros::Imu imu){
-  while(std::abs(target-imu.get_rotation())>5);
+  while(std::abs(target-(int)imu.get_rotation())>5);
   pros::delay(delay);
 }
 
@@ -80,13 +79,13 @@ if (is_enabled){
   }
 
   int iter_pos(pros::Imu imu){
-    int current_pos = imu.get_rotation();
-    current_error = target - current_pos;
-    int speed = -PID::update();
+    int current_pos = (int)imu.get_rotation();
+    current_error = target - (int)imu.get_rotation();
     return PID::update();
   }
 
 };
+
 
 class chassis_PID : public PID{
 public:

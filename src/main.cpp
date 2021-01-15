@@ -51,12 +51,11 @@ pot_PID lift_pid(0.5,0.000085,0,BOTTOM_LIFT,false);
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
- turn_PID turn(.65,.001,0,0,false); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
+ turn_PID turn(1.49,0,0,0,false); //.85,.003875,0,45; .79,.0025,0,90; .7,.0011245,0,180; 270; 360;
  void run_turn_PID(void* param){
  	while(1==1){
 		if(turn.is_enabled){
  		turn.update(back_left, front_left, back_right, front_right, 5, imu, con);
-
 		pros::delay(10);
 	}
 	else{
@@ -92,7 +91,7 @@ pot_PID lift_pid(0.5,0.000085,0,BOTTOM_LIFT,false);
  }
 
  void print_gyro(void* param){
-   con.print(2, 1, "%d", imu.get_rotation());
+   con.print(2, 1, "%d", (int)imu.get_rotation());
    pros::delay(100);
  }
 
@@ -148,22 +147,20 @@ void autonomous() {
   pros::lcd::initialize();
 
 	imu.reset();
-	pros::delay(2100);
+	pros::delay(2300);
+  while(imu.is_calibrating());
 
 	stop_motors();
 
-//turn.set_target(80);
-turn.reset(true);
-while(1==1) {
-con.print(1, 1, "%d", imu.get_roll());
-pros::delay(100);
-//con.clear();
-}
+
 //pros::delay(1000);
 //turn.reset(false);
 
-/**
+
 //1
+
+//print stuff
+
 //deploy
   intake_right.move(-127);
   intake_left.move(-127);
@@ -175,26 +172,49 @@ pros::delay(100);
 
 
 //intake first ball (maybe)
-	pros::delay(2000);
-	chassis.target=1350;
+	pros::delay(1500);
+	chassis.target=1800;
 	chassis.reset(true, correction());
 	intake_right.move(127);
 	intake_left.move(127);
 	roller.move(127);
-	pros::delay(1050);
+	pros::delay(1000);
+  chassis.reset(false, correction());
+  chassis.target=-1700;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.reset(false, correction());
+  chassis.target=1900;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.reset(false, correction());
+  chassis.target=-1600;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.target=1900;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.reset(false, correction());
+  chassis.target=-1700;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.target=900;
+  chassis.reset(true, correction());
+  pros::delay(700);
 	intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
 
 //turn right
 	chassis.reset(false, correction());
-  turn.set_target(75);
+  turn.target=84;
 	turn.reset(true);
-  turn.reach_target(3000, imu);
+  pros::delay(1000);
+  //turn.reach_target(3000, imu);
 
 //fully intake (maybe)
   turn.reset(false);
-  chassis.target=1200;
+  chassis.target=1050;
   chassis.reset(true, correction());
   intake_right.move(127);
 	intake_left.move(127);
@@ -210,27 +230,32 @@ pros::delay(100);
   pros::delay(500);
 
 //scoring while descoring in corner (maybe)
-  chassis.target=500;
+  chassis.target=860;
   chassis.reset(true, correction());
   pros::delay(500);
   intake_right.move(127);
-	intake_left.move(127);
+  intake_left.move(127);
 	roller.move(-127);
-  pros::delay(1100);
+  pros::delay(2000);
   intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
+  pros::delay(1000);
 
 //backing out and outtaking
-  chassis.target=-1200;
-  chassis.reset(true, correction());
-  intake_right.move(-127);
-  intake_left.move(-127);
-  roller.move(-127);
+  intake_right.move(127);
+  intake_left.move(127);
   pros::delay(1000);
+  chassis.target=-1600;
+  chassis.reset(true, correction());
   intake_right.move(0);
 	intake_left.move(0);
-	roller.move(0);
+  pros::delay(100);
+  intake_right.move(-127);
+  intake_left.move(-127);
+  pros::delay(1000);
+  intake_right.move(0);
+  intake_left.move(0);
   pros::delay(100);
 
 //lift down
@@ -278,7 +303,7 @@ pros::delay(100);
   chassis.reset(false, correction());
 
 //turn left to intake next ball to push first ball into tray, could score second ball if lucky
-  turn.target=-90;
+  turn.set_target(-90);
   turn.reset(true);
 
 //forward to intake second ball
@@ -295,7 +320,7 @@ pros::delay(100);
   chassis.reset(false, correction());
 
 //turn right to score and lift
-  turn.target=90;
+  turn.set_target(90);
   turn.reset(true);
   pros::delay(100);
   turn.reset(false);
@@ -320,7 +345,7 @@ pros::delay(100);
 
 //3
 //turn left to intake next ball
-  turn.target=-90;
+  turn.set_target(-90);
   turn.reset(true);
   pros::delay(100);
   turn.reset(false);
@@ -346,7 +371,7 @@ pros::delay(100);
   pros::delay(100);
 
 //turn right to score while intaking just in case
-  turn.target=45;
+  turn.set_target(45);
   turn.reset(true);
   intake_right.move(127);
   intake_left.move(127);
@@ -371,8 +396,7 @@ pros::delay(100);
 //score
   roller.move(-127);
   pros::delay(2000);
-
-  **/
+  roller.move(0);
 
 }
 /**
@@ -398,21 +422,19 @@ double joystickCurve(double input, double prev, double tol){
 
 
 void opcontrol() {
+
+
   chassis.reset(false, 0);
   turn.reset(false);
   lift_pid.reset(true);
-/*
-	imu.reset();
-	pros::delay(2300);
-	while (imu.is_calibrating());
 
 	while (true) {
 
-		con.print(2,0,"%d",(int)imu.get_heading());
 
-		pros::lcd::set_text(1, std::to_string(imu.get_heading()));
-		turn.update(back_left, front_left, back_right, front_right, 10, imu);
-*/
+
+		pros::lcd::set_text(1, std::to_string(imu.get_rotation()));
+		//turn.update(back_left, front_left, back_right, front_right, 10, imu);
+
 		double prev_power=0;
 		double prev_turn =0;
 
@@ -503,3 +525,4 @@ void opcontrol() {
 
 		 }
 	 }
+ }
