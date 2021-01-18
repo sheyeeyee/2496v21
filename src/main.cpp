@@ -30,7 +30,7 @@ pros::Controller con (CONTROLLER_MASTER);
 
 //lift PID
 int TOP_LIFT = 1920;
-int BOTTOM_LIFT = 590;
+int BOTTOM_LIFT = 520;
 bool pid_active = true;
 int current_error = 0;
 int count = 0;
@@ -153,25 +153,31 @@ void autonomous() {
 	stop_motors();
 
 
-//pros::delay(1000);
-//turn.reset(false);
+/**  intake_right.move(127);
+	intake_left.move(127);
+  pros::delay(1000);
+  intake_right.move(0);
+	intake_left.move(0);
+  chassis.target=-1000;
+  chassis.reset(true, correction());
 
+  **/
 
-//1
-
-//print stuff
-
+ //1
 //deploy
   intake_right.move(-127);
   intake_left.move(-127);
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
   pros::delay(1200);
+  lift_pid.reset(false);
   lift_pid.target=BOTTOM_LIFT;
   lift_pid.reset(true);
+  pros::delay(1000);
+  lift_pid.reset(false);
+  pros::delay(100);
 
-
-//intake first ball (maybe)
+//intake first ball
 	pros::delay(1500);
 	chassis.target=1800;
 	chassis.reset(true, correction());
@@ -198,6 +204,12 @@ void autonomous() {
   chassis.target=-1700;
   chassis.reset(true, correction());
   pros::delay(700);
+  chassis.target=1900;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  chassis.target=-2000;
+  chassis.reset(true, correction());
+  pros::delay(700);
   chassis.target=900;
   chassis.reset(true, correction());
   pros::delay(700);
@@ -207,14 +219,13 @@ void autonomous() {
 
 //turn right
 	chassis.reset(false, correction());
-  turn.target=84;
+  turn.target=85;
 	turn.reset(true);
   pros::delay(1000);
-  //turn.reach_target(3000, imu);
 
-//fully intake (maybe)
+//fully intake
   turn.reset(false);
-  chassis.target=1050;
+  chassis.target=1000;
   chassis.reset(true, correction());
   intake_right.move(127);
 	intake_left.move(127);
@@ -227,44 +238,65 @@ void autonomous() {
 
 //lift to score
   lift_pid.target=TOP_LIFT;
-  pros::delay(500);
+  lift_pid.reset(true);
+  pros::delay(700);
 
-//scoring while descoring in corner (maybe)
-  chassis.target=860;
+//scoring while descoring in corner
+  chassis.target=820;
   chassis.reset(true, correction());
-  pros::delay(500);
+  pros::delay(200);
   intake_right.move(127);
   intake_left.move(127);
-	roller.move(-127);
-  pros::delay(2000);
+  pros::delay(100);
+  roller.move(-127);
+  pros::delay(1500);
+  roller.move(0);
+  pros::delay(500);
+  turn.target=45;
+  turn.reset(true);
+  pros::delay(100);
+  turn.reset(false);
+  intake_left.move(0);
   intake_right.move(0);
-	intake_left.move(0);
-	roller.move(0);
-  pros::delay(1000);
 
 //backing out and outtaking
-  intake_right.move(127);
-  intake_left.move(127);
-  pros::delay(1000);
-  chassis.target=-1600;
+  chassis.target=-500;
   chassis.reset(true, correction());
-  intake_right.move(0);
-	intake_left.move(0);
-  pros::delay(100);
+  pros::delay(2000);
   intake_right.move(-127);
   intake_left.move(-127);
-  pros::delay(1000);
+  pros::delay(2000);
   intake_right.move(0);
   intake_left.move(0);
   pros::delay(100);
+  chassis.reset(false, correction());
 
 //lift down
   lift_pid.target=BOTTOM_LIFT;
+  lift_pid.reset(true);
+  pros::delay(100);
 
-//2
-//turn left to intake wall ball
+//turn towards center
+  turn.set_target(150);
+  turn.reset(true);
+  pros::delay(100);
+  chassis.target=2000;
+  chassis.reset(true, correction());
+  pros::delay(1000);
   chassis.reset(false, correction());
-  turn.set_target(-90);
+  lift_pid.target=TOP_LIFT;
+  lift_pid.reset(true);
+  pros::delay(100);
+
+  turn.set_target(30);
+  turn.reset(true);
+  pros::delay(100);
+  turn.reset(false);
+
+
+/** //2
+//turn left to intake wall ball
+  turn.set_target(-128);
   turn.reset(true);
   pros::delay(100);
   turn.reset(false);
@@ -397,6 +429,8 @@ void autonomous() {
   roller.move(-127);
   pros::delay(2000);
   roller.move(0);
+
+**/
 
 }
 /**
