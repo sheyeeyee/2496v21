@@ -12,14 +12,14 @@ pros::Imu imu (19);
 
 //lift
 pros::Motor lift (16,pros::E_MOTOR_GEARSET_18);
-pros::ADIAnalogIn lift_pot ('B');
+pros::ADIAnalogIn lift_pot ('A');
 
 //intake
 pros::Motor intake_left (11,pros::E_MOTOR_GEARSET_06);
 pros::Motor intake_right (20,pros::E_MOTOR_GEARSET_06,true);
 
 //roller
-pros::Motor roller (17,pros::E_MOTOR_GEARSET_18,true);
+pros::Motor roller (2,pros::E_MOTOR_GEARSET_18,true);
 
 //controller
 pros::Controller con (CONTROLLER_MASTER);
@@ -29,13 +29,13 @@ pros::Controller con (CONTROLLER_MASTER);
 //chassis_PID go(0.14074,0.0000005,0,0,0,0,4000, true);
 
 //lift PID
-int TOP_LIFT = 1920;
-int BOTTOM_LIFT = 520;
+int TOP_LIFT = 1900;
+int BOTTOM_LIFT = 608;
 bool pid_active = true;
 int current_error = 0;
 int count = 0;
 
-pot_PID lift_pid(0.61,0.00009,0,BOTTOM_LIFT,false);
+pot_PID lift_pid(0.4,0,0,BOTTOM_LIFT,false);
 
 
 /**
@@ -146,22 +146,13 @@ void autonomous() {
   //pros::Task so(print_gyro);
   pros::lcd::initialize();
 
+  con.set_text(1, 1, "here");
+
 	imu.reset();
 	pros::delay(2300);
   while(imu.is_calibrating());
 
 	stop_motors();
-
-
-/**  intake_right.move(127);
-	intake_left.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-	intake_left.move(0);
-  chassis.target=-1000;
-  chassis.reset(true, correction());
-
-  **/
 
  //1
 //deploy
@@ -175,49 +166,31 @@ void autonomous() {
   lift_pid.reset(true);
   pros::delay(100);
   lift_pid.reset(false);
-  pros::delay(100);
+  pros::delay(800);
 
 //intake first ball
-	pros::delay(1500);
-	chassis.target=1800;
+	pros::delay(2000);
+	chassis.target=2300;
 	chassis.reset(true, correction());
 	intake_right.move(127);
 	intake_left.move(127);
 	roller.move(127);
-	pros::delay(1000);
-  chassis.target=-1800;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=-1700;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=-1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1478;
-  chassis.reset(true, correction());
-  pros::delay(700);
+  pros::delay(1400);
 	intake_right.move(0);
 	intake_left.move(0);
 	roller.move(0);
 
 //turn right towards corner goal
 	chassis.reset(false, correction());
-  turn.target=79;
+  turn.target=81;
 	turn.reset(true);
-  turn.reach_target(80, imu);
+  turn.reach_target(100, imu);
   turn.reset(false);
 
-//fully intake
-  chassis.target=840;
+//foward a little
+  chassis.target=830;
   chassis.reset(true, correction());
-  pros::delay(1000);
+  pros::delay(800);
   chassis.reset(false, correction());
 
 //lift to score
@@ -226,13 +199,13 @@ void autonomous() {
   pros::delay(1000);
 
 //scoring while descoring in corner
-  chassis.target=805;
+  chassis.target=815;
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(2000);
   roller.move(-127);
-  pros::delay(600);
+  pros::delay(800);
   roller.move(0);
   pros::delay(500);
   intake_left.move(0);
@@ -240,21 +213,22 @@ void autonomous() {
   pros::delay(1000);
 
 //backing out and outtaking
-  chassis.target=-1000;
+  chassis.target=-700;
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
-  pros::delay(200);
+  pros::delay(2000);
   intake_right.move(0);
   intake_left.move(0);
   pros::delay(100);
   chassis.reset(false, correction());
 
 //lift down
-  chassis.target=-2000;
+  chassis.target=-2300;
   chassis.reset(true, correction());
   intake_right.move(-127);
   intake_left.move(-127);
+  pros::delay(2000);
   lift_pid.target=BOTTOM_LIFT;
   lift_pid.reset(true);
   pros::delay(1000);
@@ -263,7 +237,7 @@ void autonomous() {
   chassis.reset(false, correction());
 
 //backwards towards center
-  turn.target=53;
+  turn.target=50;
   turn.reset(true);
   turn.reach_target(80, imu);
   turn.reset(false);
@@ -303,251 +277,9 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(500);
 
-//score center!!!
-  lift_pid.target=TOP_LIFT;
-  lift_pid.reset(true);
-  pros::delay(1000);
-  chassis.target=900;
-  chassis.reset(true, correction());
-  pros::delay(600);
-  turn.target=269;
-  turn.reset(true);
-  pros::delay(500);
-  turn.reset(false);
-  roller.move(-127);
-  pros::delay(850);
-  roller.move(0);
-  chassis.target=-2500;
-  chassis.reset(true, correction());
-  pros::delay(1300);
-  lift_pid.target=BOTTOM_LIFT;
-  lift_pid.reset(true);
-
-//path to next goal
-  turn.target=215;
-  turn.reset(true);
-  turn.reach_target(600, imu);
-  turn.reset(false);
-
-  chassis.target=2000;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.reset(false, correction());
-
-//turn right towards next ball
-  turn.target=305;
-  turn.reset(true);
-  pros::delay(700);
-  turn.reset(false);
-  pros::delay(700);
-
-  chassis.target=3000;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.reset(false, correction());
-
-//intake
-  chassis.target=1800;
-	chassis.reset(true, correction());
-	intake_right.move(127);
-	intake_left.move(127);
-	roller.move(127);
-	pros::delay(1000);
-  chassis.target=-1700;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=-1600;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=-1900;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  chassis.target=1363;
-  chassis.reset(true, correction());
-  pros::delay(700);
-	intake_right.move(0);
-	intake_left.move(0);
-	roller.move(0);
-
-//lift to score
-  lift_pid.target=TOP_LIFT;
-  lift_pid.reset(true);
-  pros::delay(1000);
-  lift_pid.reset(false);
-
-//scoring while descoring
-  chassis.target=1000;
-  chassis.reset(true, correction());
-  pros::delay(700);
-  intake_right.move(127);
-  intake_left.move(127);
-  pros::delay(2000);
-  roller.move(-127);
-  pros::delay(600);
-  roller.move(0);
-  pros::delay(500);
-  intake_left.move(0);
-  intake_right.move(0);
-  pros::delay(1000);
-
-//backing out
-  chassis.target=-1000;
-  chassis.reset(true, correction());
+//go to next corner goal
 
 
-/**
-//descore center v2
-  chassis.target=300;
-  chassis.reset(true, correction());
-  turn.target=30;
-  turn.reset(true);
-  chassis.target=-300;
-  chassis.reset(true, correction());
-**/
-
-/** //2
-//turn left to intake wall ball
-  turn.set_target(-128);
-  turn.reset(true);
-  pros::delay(100);
-  turn.reset(false);
-  pros::delay(100);
-
-//intake wall ball
-  chassis.target=500;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  intake_right.move(127);
-	intake_left.move(127);
-	roller.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-	intake_left.move(0);
-	roller.move(0);
-
-//fully intake wall ball
-  chassis.reset(false, correction());
-  pros::delay(100);
-  intake_right.move(127);
-  intake_left.move(127);
-  roller.move(127);
-
-//back out (intake just in case)
-  chassis.target=-900;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  intake_right.move(127);
-  intake_left.move(127);
-  roller.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-  intake_left.move(0);
-  roller.move(0);
-  chassis.reset(false, correction());
-
-//turn left to intake next ball to push first ball into tray, could score second ball if lucky
-  turn.set_target(-90);
-  turn.reset(true);
-
-//forward to intake second ball
-  chassis.target=500;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  intake_right.move(127);
-  intake_left.move(127);
-  roller.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-  intake_left.move(0);
-  roller.move(0);
-  chassis.reset(false, correction());
-
-//turn right to score and lift
-  turn.set_target(90);
-  turn.reset(true);
-  pros::delay(100);
-  turn.reset(false);
-  pros::delay(100);
-  lift_pid.target=TOP_LIFT;
-
-//forward to score center wall goal
-  chassis.target=1000;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  chassis.reset(false, correction());
-
-//score center wall
-  roller.move(-127);
-  pros::delay(2000);
-
-//backing out
-  chassis.target=-1000;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  chassis.reset(false, correction());
-
-//3
-//turn left to intake next ball
-  turn.set_target(-90);
-  turn.reset(true);
-  pros::delay(100);
-  turn.reset(false);
-
-//forward [to wall?] while intake
-  chassis.target=1300;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  intake_right.move(127);
-  intake_left.move(127);
-  roller.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-  intake_left.move(0);
-  roller.move(0);
-  chassis.reset(false, correction());
-
-//back out from wall (maybe)
-  chassis.target=-500;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  chassis.reset(false, correction());
-  pros::delay(100);
-
-//turn right to score while intaking just in case
-  turn.set_target(45);
-  turn.reset(true);
-  intake_right.move(127);
-  intake_left.move(127);
-  roller.move(127);
-  pros::delay(1000);
-  intake_right.move(0);
-  intake_left.move(0);
-  roller.move(0);
-  pros::delay(100);
-  turn.reset(false);
-
-//lift to score
-  lift_pid.target=TOP_LIFT;
-
-//forward to score corner goal
-  chassis.target=500;
-  chassis.reset(true, correction());
-  pros::delay(100);
-  chassis.reset(false, correction());
-  pros::delay(100);
-
-//score
-  roller.move(-127);
-  pros::delay(2000);
-  roller.move(0);
-
-**/
 
 }
 /**
@@ -611,17 +343,6 @@ void opcontrol() {
 
 					//error and update function is desired angle - sensored angle
 
-//lift
-			if (con.get_digital(pros::E_CONTROLLER_DIGITAL_L1))	{
-				lift.move(127);
-				}
-			else if(con.get_digital(pros::E_CONTROLLER_DIGITAL_L2))	{
-				lift.move(-127);
-			}
-				else {
-					lift.move(0);
-				}
-
 			//lift PID
 			//	lift_pid.update(lift_pot, lift);
 
@@ -634,7 +355,7 @@ void opcontrol() {
 
 					//lift position display
 						if(count%25==0){con.clear_line(2);}
-						//con.print(2, 0, "value %d",lift_pot.get_value()); //modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
+						con.print(2, 0, "value %d",lift_pot.get_value()); //modulo (%) produces remainder of integer division; %d is for decimal %i is for integer
 						count++;
  			 			pros::delay(10);
 
