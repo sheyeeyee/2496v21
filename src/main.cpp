@@ -203,9 +203,9 @@ void autonomous() {
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
-  pros::delay(2000);
+  pros::delay(1900);
   roller.move(-127);
-  pros::delay(800);
+  pros::delay(300);
   roller.move(0);
   pros::delay(500);
   intake_left.move(0);
@@ -277,8 +277,87 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(500);
 
-//go to next corner goal
+//score center
+  lift_pid.target=TOP_LIFT;
+  lift_pid.reset(true);
+  pros::delay(1000);
+  chassis.target=1000;
+  chassis.reset(true, correction());
+  pros::delay(600);
+  turn.target=269;
+  turn.reset(true);
+  pros::delay(500);
+  turn.reset(false);
+  roller.move(-127);
+  pros::delay(850);
+  roller.move(0);
+  chassis.target=-2500;
+  chassis.reset(true, correction());
+  pros::delay(1300);
+  lift_pid.target=BOTTOM_LIFT;
+  lift_pid.reset(true);
 
+//go to next corner goal
+  turn.target=190;
+  turn.reset(true);
+  pros::delay(400);
+  turn.reset(false);
+  chassis.target=2800;
+  chassis.reset(true, correction());
+  pros::delay(900);
+  chassis.reset(false, correction());
+  turn.target=280;
+  turn.reset(true);
+  pros::delay(400);
+  turn.reset(false);
+  chassis.target=15000;
+  chassis.reset(true, correction());
+
+//intake next ball
+  intake_left.move(127);
+  intake_right.move(127);
+  roller.move(127);
+  chassis.target=4000;
+  chassis.reset(true, correction());
+  pros::delay(3000);
+  intake_left.move(0);
+  intake_right.move(0);
+  roller.move(0);
+
+//turn towards corner
+  chassis.reset(false, correction());
+  turn.target=200;
+  turn.reset(true);
+  pros::delay(200);
+  turn.reset(false);
+
+//score
+  lift_pid.target=TOP_LIFT;
+  lift_pid.reset(true);
+  chassis.target=800;
+  chassis.reset(true, correction());
+  pros::delay(700);
+  intake_right.move(127);
+  intake_left.move(127);
+  pros::delay(2000);
+  roller.move(-127);
+  pros::delay(300);
+  roller.move(0);
+  pros::delay(500);
+  intake_left.move(0);
+  intake_right.move(0);
+  pros::delay(1000);
+
+//backing out and outtaking
+  chassis.target=-700;
+  chassis.reset(true, correction());
+  intake_right.move(127);
+  intake_left.move(127);
+  pros::delay(2000);
+  intake_right.move(0);
+  intake_left.move(0);
+  pros::delay(100);
+  chassis.reset(false, correction());
 
 
 }
