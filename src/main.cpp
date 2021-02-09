@@ -331,7 +331,7 @@ void autonomous() {
   pros::delay(200);
   turn.reset(false);
 
-//score
+//score corner
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
   chassis.target=800;
@@ -358,7 +358,6 @@ void autonomous() {
   intake_left.move(0);
   pros::delay(100);
   chassis.reset(false, correction());
-
 
 }
 /**
