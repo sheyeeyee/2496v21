@@ -288,21 +288,17 @@ void autonomous() {
 //lift to score center
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
-  turn.target=-62; ///////////////////
+  turn.target=-63; ///////////////////
   turn.reset(true);
   turn.reach_target(400, imu);
   turn.reset(false);
   pros::delay(300);
 
 //score center
-  chassis.target=1400;
+  chassis.target=1450;
   chassis.reset(true, correction());
   pros::delay(800);
   chassis.reset(false, correction());
-  turn.target=-67;
-  turn.reset(true);
-  turn.reach_target(400, imu);
-  turn.reset(false);
   roller.move(-127);
   pros::delay(2000);
   roller.move(0);
@@ -355,7 +351,7 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(1000);
   chassis.reset(false, correction());
-  turn.target=-45; ///////////////////
+  turn.target=-46; ///////////////////
   turn.reset(true);
   turn.reach_target(700, imu);
   turn.reset(false);
@@ -364,7 +360,7 @@ void autonomous() {
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
   pros::delay(600);
-  chassis.target=2600;
+  chassis.target=2650;
   chassis.reset(true, correction());
   pros::delay(700);
   intake_right.move(127);
