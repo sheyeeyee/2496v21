@@ -163,10 +163,11 @@ void autonomous() {
   pros::delay(1000);
   lift_pid.target=BOTTOM_LIFT;
   lift_pid.reset(true);
-  pros::delay(1000);
+  pros::delay(1300);
   intake_right.move(0);
   intake_left.move(0);
   lift_pid.reset(false);
+  pros::delay(100);
 
 //intake first ball
 	chassis.target=2300;
@@ -198,7 +199,7 @@ void autonomous() {
   pros::delay(800);
 
 //scoring while descoring in corner
-  chassis.target=805;
+  chassis.target=800;
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
@@ -215,23 +216,23 @@ void autonomous() {
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(200);
-  chassis.target=-700;
+  chassis.target=-725;
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(1000);
   intake_right.move(0);
   intake_left.move(0);
-  chassis.target=-900;
+  chassis.target=-1000;
   chassis.reset(false, correction());
-  pros::delay(200);
+  pros::delay(500);
 
 //outtaking
   turn.target=45; ///////////////////
   turn.reset(true);
   turn.reach_target(300, imu);
   turn.reset(false);
-  chassis.target=-2000;
+  chassis.target=-1911;
   chassis.reset(true, correction());
   intake_right.move(-127);
   intake_left.move(-127);
@@ -244,11 +245,11 @@ void autonomous() {
   intake_left.move(0);
 
 //back towards center
-  chassis.target=-2140;
+  chassis.target=-2169;
   chassis.reset(true, correction());
-  pros::delay(1000);
+  pros::delay(1100);
   chassis.reset(false, correction());
-  turn.target=-56; ///////////////////
+  turn.target=-57; ///////////////////
   turn.reset(true);
   turn.reach_target(400, imu);
   turn.reset(false);
@@ -288,10 +289,6 @@ void autonomous() {
 //lift to score center
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
-  turn.target=-63; ///////////////////
-  turn.reset(true);
-  turn.reach_target(400, imu);
-  turn.reset(false);
   pros::delay(300);
 
 //score center
@@ -330,7 +327,7 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(1700);
   chassis.reset(false, correction());
-  turn.target=0; ///////////////////
+  turn.target=-2; ///////////////////
   turn.reset(true);
   turn.reach_target(900, imu);
   turn.reset(false);
@@ -341,20 +338,20 @@ void autonomous() {
   intake_left.move(127);
   intake_right.move(127);
   roller.move(127);
-  pros::delay(3200);
-  intake_left.move(0);
-  intake_right.move(0);
-  roller.move(0);
+  pros::delay(3500);
 
 //turn towards corner
-  chassis.target=-1775;
+  chassis.target=-1778;
   chassis.reset(true, correction());
   pros::delay(1000);
   chassis.reset(false, correction());
-  turn.target=-46; ///////////////////
+  turn.target=-45; ///////////////////
   turn.reset(true);
   turn.reach_target(700, imu);
   turn.reset(false);
+  intake_left.move(0);
+  intake_right.move(0);
+  roller.move(0);
 
 //score corner
   lift_pid.target=TOP_LIFT;
