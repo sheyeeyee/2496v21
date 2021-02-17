@@ -216,14 +216,14 @@ void autonomous() {
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(200);
-  chassis.target=-725;
+  chassis.target=-750;
   chassis.reset(true, correction());
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(1000);
   intake_right.move(0);
   intake_left.move(0);
-  chassis.target=-1000;
+  chassis.target=-975;
   chassis.reset(false, correction());
   pros::delay(500);
 
@@ -232,7 +232,7 @@ void autonomous() {
   turn.reset(true);
   turn.reach_target(300, imu);
   turn.reset(false);
-  chassis.target=-1911;
+  chassis.target=-1921;
   chassis.reset(true, correction());
   intake_right.move(-127);
   intake_left.move(-127);
@@ -341,7 +341,7 @@ void autonomous() {
   pros::delay(3500);
 
 //turn towards corner
-  chassis.target=-1778;
+  chassis.target=-1779;
   chassis.reset(true, correction());
   pros::delay(1000);
   chassis.reset(false, correction());
@@ -357,9 +357,10 @@ void autonomous() {
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
   pros::delay(600);
-  chassis.target=2650;
+  chassis.target=2655;
   chassis.reset(true, correction());
   pros::delay(700);
+  chassis.reset(false, correction());
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(2000);
@@ -377,6 +378,11 @@ void autonomous() {
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(2000);
+  chassis.target=800;
+  chassis.reset(true, correction());
+  pros::delay(500);
+  chassis.target=-1000;
+  chassis.reset(true, correction());
   intake_right.move(0);
   intake_left.move(0);
   chassis.reset(false, correction());
