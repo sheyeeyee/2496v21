@@ -378,11 +378,6 @@ void autonomous() {
   intake_right.move(127);
   intake_left.move(127);
   pros::delay(2000);
-  chassis.target=800;
-  chassis.reset(true, correction());
-  pros::delay(500);
-  chassis.target=-1000;
-  chassis.reset(true, correction());
   intake_right.move(0);
   intake_left.move(0);
   chassis.reset(false, correction());
