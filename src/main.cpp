@@ -146,7 +146,7 @@ void autonomous() {
   //pros::Task so(print_gyro);
   pros::lcd::initialize();
 
-  con.set_text(1, 1, "here");
+  con.set_text(1, 1, "jeff: hi");
 
 	imu.reset();
 	pros::delay(2300);
@@ -232,7 +232,7 @@ void autonomous() {
   turn.reset(true);
   turn.reach_target(300, imu);
   turn.reset(false);
-  chassis.target=-1921;
+  chassis.target=-1925;
   chassis.reset(true, correction());
   intake_right.move(-127);
   intake_left.move(-127);
@@ -247,9 +247,9 @@ void autonomous() {
 //back towards center
   chassis.target=-2169;
   chassis.reset(true, correction());
-  pros::delay(1100);
+  pros::delay(1175);
   chassis.reset(false, correction());
-  turn.target=-57; ///////////////////
+  turn.target=-60; ///////////////////
   turn.reset(true);
   turn.reach_target(400, imu);
   turn.reset(false);
@@ -323,7 +323,7 @@ void autonomous() {
   turn.reset(true);
   turn.reach_target(800, imu);
   turn.reset(false);
-  chassis.target=4073;
+  chassis.target=4042;
   chassis.reset(true, correction());
   pros::delay(1700);
   chassis.reset(false, correction());
@@ -341,11 +341,11 @@ void autonomous() {
   pros::delay(3500);
 
 //turn towards corner
-  chassis.target=-1779;
+  chassis.target=-1769;
   chassis.reset(true, correction());
   pros::delay(1000);
   chassis.reset(false, correction());
-  turn.target=-45; ///////////////////
+  turn.target=-44; ///////////////////
   turn.reset(true);
   turn.reach_target(700, imu);
   turn.reset(false);
@@ -357,7 +357,7 @@ void autonomous() {
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
   pros::delay(600);
-  chassis.target=2655;
+  chassis.target=2269;
   chassis.reset(true, correction());
   pros::delay(700);
   chassis.reset(false, correction());
