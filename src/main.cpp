@@ -29,13 +29,13 @@ pros::Controller con (CONTROLLER_MASTER);
 //chassis_PID go(0.14074,0.0000005,0,0,0,0,4000, true);
 
 //lift PID
-int TOP_LIFT = 1900;
+int TOP_LIFT = 1875;
 int BOTTOM_LIFT = 600;
 bool pid_active = true;
 int current_error = 0;
 int count = 0;
 
-pot_PID lift_pid(0.4,0,0,BOTTOM_LIFT,false);
+pot_PID lift_pid(0.4,0.00001,0,BOTTOM_LIFT,false);
 
 
 /**
@@ -160,7 +160,7 @@ void autonomous() {
   intake_left.move(-127);
   lift_pid.target=TOP_LIFT;
   lift_pid.reset(true);
-  pros::delay(1000);
+  pros::delay(1300);
   lift_pid.target=BOTTOM_LIFT;
   lift_pid.reset(true);
   pros::delay(1300);
@@ -311,7 +311,7 @@ void autonomous() {
   lift_pid.target=BOTTOM_LIFT;
   pros::delay(900);
   imu.reset();
-  pros::delay(2100);
+  pros::delay(2150);
 
  //3
 //go to next corner
@@ -319,7 +319,7 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(700);
   chassis.reset(false, correction());
-  turn.target=-90; ///////////////////
+  turn.target=-91; ///////////////////
   turn.reset(true);
   turn.reach_target(800, imu);
   turn.reset(false);
