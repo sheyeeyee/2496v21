@@ -118,6 +118,4 @@ public:
     BL.move(speed+turn_mod); FL.move(speed+turn_mod); BR.move(speed-turn_mod); FR.move(speed-turn_mod);
     return speed;
   }
-
-
 };

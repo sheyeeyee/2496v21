@@ -19,7 +19,7 @@ pros::Motor intake_left (11,pros::E_MOTOR_GEARSET_06);
 pros::Motor intake_right (20,pros::E_MOTOR_GEARSET_06,true);
 
 //roller
-pros::Motor roller (2,pros::E_MOTOR_GEARSET_18,true);
+pros::Motor roller (3,pros::E_MOTOR_GEARSET_18,true);
 
 //controller
 pros::Controller con (CONTROLLER_MASTER);
