@@ -16,7 +16,7 @@ public:
 
   void reset(bool enable){
       prev_error = 0;
-      i_value =0;
+      i_value = 0;
       is_enabled = enable;
   }
 

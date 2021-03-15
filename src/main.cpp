@@ -225,7 +225,7 @@ void autonomous() {
   intake_right.move(0);
   intake_left.move(0);
   pros::delay(100);
-  chassis.target=-975;
+  chassis.target=-969;
   intake_right.move(-127);
   intake_left.move(-127);
   chassis.reset(false, correction());
@@ -238,7 +238,7 @@ void autonomous() {
   turn.reset(true);
   turn.reach_target(300, imu);
   turn.reset(false);
-  chassis.target=-2000;
+  chassis.target=-1984;
   chassis.reset(true, correction());
   intake_right.move(-127);
   intake_left.move(-127);
@@ -251,7 +251,7 @@ void autonomous() {
   intake_left.move(0);
 
 //back towards center
-  chassis.target=-2169;
+  chassis.target=-2155;
   chassis.reset(true, correction());
   pros::delay(1200);
   chassis.reset(false, correction());
@@ -300,13 +300,14 @@ void autonomous() {
   pros::delay(600);
 
 //score center
-  chassis.target=1450;
+  chassis.target=1440;
   chassis.reset(true, correction());
-  pros::delay(800);
-  chassis.reset(false, correction());
+  pros::delay(1000);
   roller.move(-127);
   pros::delay(2000);
   roller.move(0);
+  stop_motors();
+  chassis.reset(false, correction());
 
 //reset pos
   chassis.target=-5000;
@@ -323,7 +324,7 @@ void autonomous() {
 
  //3
 //go to next corner
-  chassis.target=1850;
+  chassis.target=1805;
   chassis.reset(true, correction());
   pros::delay(700);
   chassis.reset(false, correction());
@@ -331,15 +332,15 @@ void autonomous() {
   turn.reset(true);
   turn.reach_target(900, imu);
   turn.reset(false);
-  chassis.target=4042;
+  chassis.target=3825;
   chassis.reset(true, correction());
   pros::delay(1700);
   chassis.reset(false, correction());
-  turn.target=0; ///////////////////
+  turn.target=1; ///////////////////
   turn.reset(true);
   turn.reach_target(900, imu);
   turn.reset(false);
-  chassis.target=6700;
+  chassis.target=6769;
   chassis.reset(true, correction());
 
 //intake next ball
@@ -353,7 +354,7 @@ void autonomous() {
   chassis.reset(true, correction());
   pros::delay(1000);
   chassis.reset(false, correction());
-  turn.target=-48; ///////////////////
+  turn.target=-43; ///////////////////
   turn.reset(true);
   turn.reach_target(700, imu);
   turn.reset(false);
@@ -373,7 +374,7 @@ void autonomous() {
   intake_left.move(127);
   pros::delay(2000);
   roller.move(-127);
-  pros::delay(300);
+  pros::delay(800);
   roller.move(0);
   pros::delay(500);
   intake_left.move(0);
