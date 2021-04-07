@@ -184,7 +184,7 @@ void autonomous() {
   turn.reach_target(100, imu);
   turn.reset(false);
 
-//foward a little
+//forward a little
   chassis.target=830;
   chassis.reset(true, correction());
   pros::delay(900);
