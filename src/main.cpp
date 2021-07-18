@@ -507,7 +507,6 @@ void opcontrol() {
 			if(con.get_digital(pros::E_CONTROLLER_DIGITAL_X))	{
 				roller.move(-127);
 			 }
-
 		 }
 	 }
  }
